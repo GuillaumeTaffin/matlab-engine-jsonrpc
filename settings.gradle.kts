@@ -3,4 +3,5 @@ plugins {
 }
 
 rootProject.name = "matlab-engine-jsonrpc"
-include("app")
+include("server")
+include("integration-tests")

@@ -10,7 +10,9 @@ repositories {
 val matlabroot: String by properties
 
 dependencies {
-    implementation("com.github.briandilley.jsonrpc4j:jsonrpc4j:1.6")
+    implementation(libs.jsonrpc4j)
+    implementation(libs.javax.servlet)
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
     implementation(files("$matlabroot/extern/engines/java/jar/engine.jar"))
 
     testImplementation(libs.junit.jupiter.engine)
@@ -24,7 +26,8 @@ java {
 }
 
 application {
-    mainClass = "org.example.AppKt"
+    mainClass = "com.gt.matlab.engine.rpc.ServerKt"
+    applicationDefaultJvmArgs = listOf("-Djava.library.path=$matlabroot/bin/maca64")
 }
 
 tasks.withType<Test>().configureEach {
@@ -35,8 +38,4 @@ tasks.withType<Test>().configureEach {
 tasks.register<Exec>("startMatlab") {
     val matlab = providers.gradleProperty("matlabroot").map { "$it/bin/matlab" }
     commandLine(matlab.get(), "-desktop")
-
-    doLast {
-        Thread.sleep(5000)
-    }
 }
